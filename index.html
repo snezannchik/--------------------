@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/colors.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+    <title>Программа лояльности магазина сладостей</title>
+</head>
+<body>
+    <!-- Форма авторизации -->
+    <div class="auth">
+        <div class="main">
+            <div class="logo">
+                <img src="img/лого.svg" alt="">
+            </div>
+            <div class="login">
+                <h1 class="login_title">ВХОД</h1>
+                <hr>
+                <span class="error-message"></span>
+                <form class="login-form" onsubmit="event.preventDefault(); authenticate();">
+                    <div class="input-field">
+                        <input class="field" type="text" name="username" placeholder="ЛОГИН" required class="username">
+                    </div>
+                    <div class="input-field">
+                        <input class="field" type="password" name="password" placeholder="ПАРОЛЬ" required class="password">
+                    </div>
+                    <button type="submit" class="login-button">ВОЙТИ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- Панель администратора, скрытая до авторизации -->
+<div class="admin_cont" id="admin-content" style="display: none;">
+    <header class="header_admin">
+        <div class="admin_logo">
+            <img src="img/logomin.svg" alt="Лого">
+            <span class="admin_logo_text">ПРОГРАММА ЛОЯЛЬНОСТИ<br>МАГАЗИНА СЛАДОСТЕЙ</span>
+        </div>
+        <nav id="navigation">
+            <ul class="nav">
+                <li onclick="showSection('discounts', this)">Скидки</li>
+                <li onclick="showSection('behavior', this)">Поведение пользователей</li>
+                <li onclick="showSection('settings', this)">Настройки</li>
+                <li onclick="logout()">
+                    <img src="img/logout.svg" alt="Выйти" class="logout">
+                </li>
+            </ul>            
+            <div class="underline"></div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Раздел Скидки -->
+        <section id="discounts" class="tab-content" style="display: block;">
+            <div class="table-container">
+                <table class="discount-table">
+                    <thead>
+                        <tr>
+                            <th>Имя клиента</th>
+                            <th>Общая сумма покупок</th>
+                            <th>Текущая скидка</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Иванов Иван Иванович</td>
+                            <td>5</td>
+                            <td>5%</td>
+                        </tr>
+                        <tr>
+                            <td>Петрова Анна Сергеевна</td>
+                            <td>10</td>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>Сидоров Сергей Петрович</td>
+                            <td>1</td>
+                            <td>7%</td>
+                        </tr>
+                        <tr>
+                            <td>Кузнецова Ольга Викторовна</td>
+                            <td>2</td>
+                            <td>12%</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <div class="pagination">
+                                    <img src="img/prev.svg" alt="Назад" class="pagination-icon">
+                                    <img src="img/next.svg" alt="Вперед" class="pagination-icon">
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Персонализированные предложения -->
+            <div id="perspred" style="display: block;">
+                <div class="wraper_pers">
+                    <h1 class="pers_text">Персонализированные предложения</h1>
+                    <div class="pers_name">
+                        <p>Клиент:</p> 
+                        <p>Иванов Иван Иванович</p>
+                    </div>
+                    <!-- карточки товара -->
+                    <div class="pers_cards"></div>
+                </div>
+            </div>
+        </section>        
+
+        <!-- Раздел Поведение пользователей -->
+        <section id="behavior" class="tab-content" style="display: none;">
+            <div class="table-container">
+                <table class="discount-table">
+                    <thead>
+                        <tr>
+                            <th>Имя клиента</th>
+                            <th>Тип действия<img class="down_arrow" src="img/downarrow.svg" alt=""></th>
+                            <th>Название товара</th>
+                            <th>Дата действия<img class="down_arrow" src="img/downarrow.svg" alt=""></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Иванов Иван Иванович</td>
+                            <td>Просмотр</td>
+                            <td>Шоколадный торт</td>
+                            <td>2024-01-01</td>
+                        </tr>
+                        <tr>
+                            <td>Петрова Анна Сергеевна</td>
+                            <td>Добавление в корзину</td>
+                            <td>Конфеты "Ассорти</td>
+                            <td>2024-01-01</td>
+                        </tr>
+                        <tr>
+                            <td>Сидоров Сергей Петрович</td>
+                            <td>Заказ</td>
+                            <td>Пирожные "Эклер"</td>
+                            <td>2024-01-01</td>
+                        </tr>
+                        <tr>
+                            <td>Кузнецова Ольга Викторовна</td>
+                            <td>Просмотр</td>
+                            <td>Карамельные леденцы</td>
+                            <td>2024-01-01</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="tfoot_pov">
+                        <tr>
+                            <td colspan="4">
+                                <div class="pagination">
+                                    <img src="img/prev.svg" alt="Назад" class="pagination-icon">
+                                    <img src="img/next.svg" alt="Вперед" class="pagination-icon">
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <!-- Раздел Настройки -->
+<section id="settings" class="tab-content" style="display: none;">
+    <div class="set">
+        <div class="wrapper_set">
+            <div class="set_left">
+                <div class="set_left_buy square">
+                    <span class="set_text">Выберите порог накопленных покупок</span>
+                    <input id="order-threshold" class="set_inp" type="number" required placeholder="Количество покупок" min="1">
+                </div>
+                <div class="set_left_discount square">
+                    <span class="set_text">Выберите процент скидки</span>
+                    <input id="discount-percentage" class="set_inp" type="number" required placeholder="Процент скидки" min="1">
+                </div>
+            </div>
+            <div class="set_right">
+                <span class="set_text set_right_text">Выберите период действия скидки</span>
+                <label class="set_text">С
+                    <input id="discount-start" class="set_inp" type="date" required placeholder="Начало действия">
+                </label>
+                <label class="set_text">по
+                    <input id="discount-end" class="set_inp" type="date" required placeholder="Конец действия">
+                </label>
+            </div>
+        </div>
+        <div class="btn_set">
+            <button class="btn_set_save" onclick="saveDiscountSettings()">СОХРАНИТЬ</button>
+            <button class="btn_set_save">СБРОСИТЬ</button>
+        </div>
+        <span class="text_done" style="display: none;">Скидка успешно сохранена!</span>
+    </div>
+</section>
+
+    </main>
+</div>
+
+</body>
+</html>
