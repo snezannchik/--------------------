@@ -4,23 +4,19 @@ const authenticate = async () => {
     const password = document.querySelector('input[name="password"]').value.trim();
     const errorMessage = document.querySelector('.error-message');
 
-    // Скрываем предыдущее сообщение об ошибке
     errorMessage.style.display = 'none';
     
-    // Валидация полей ввода
     if (!username) {
         showError('Пожалуйста, введите логин.');
         return;
     }
 
-    // Валидация логина
     if (username.length < 5) {
         showError('Логин должен содержать не менее 5 символов.');
         document.querySelector('input[name="username"]').classList.add('invalid');
         return;
     }
 
-    // Проверка на наличие цифр и пробелов в логине
     if (/[^a-zA-Z]/.test(username)) {
         showError('Логин может содержать только буквы.');
         document.querySelector('input[name="username"]').classList.add('invalid');
@@ -38,15 +34,12 @@ const authenticate = async () => {
     }
 
     try {
-        // Запрос на сервер для проверки логина и пароля
         const response = await fetch('/db/db.json');
         if (!response.ok) {
             throw new Error('Ошибка загрузки JSON файла');
         }
 
         const data = await response.json();
-        
-        // Находим пользователя по логину и паролю
         const adminUser = data.users.find(user => user.login === username && user.password === password);
         
         if (adminUser) {
@@ -68,7 +61,6 @@ const authenticate = async () => {
     }
 };
 
-// Функция для отображения сообщений об ошибках
 const showError = (message) => {
     const errorMessage = document.querySelector('.error-message');
     errorMessage.textContent = message;
@@ -77,13 +69,11 @@ const showError = (message) => {
     errorMessage.style.display = 'block';
 };
 
-// Привязка события к форме авторизации
 document.getElementById('authForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Отменяем стандартное поведение формы
-    authenticate(); // Вызываем функцию авторизации
+    event.preventDefault(); 
+    authenticate();
 });
 
-// устанавливает активный элемент навигации и позиционирует линию под ним
 const setActive = (element) => {
     const items = document.querySelectorAll('#navigation li');
     items.forEach(item => item.classList.remove('active'));
@@ -93,15 +83,12 @@ const setActive = (element) => {
     const rect = element.getBoundingClientRect();
     const underline = document.querySelector('.underline');
     underline.style.width = `${rect.width}px`;
-    underline.style.left = `${rect.left - document.getElementById('navigation').getBoundingClientRect().left}px`; // Позиционируем линию
+    underline.style.left = `${rect.left - document.getElementById('navigation').getBoundingClientRect().left}px`;
 };
 
-// сбрасывает данные авторизации и переключает видимость админского контента
 const logout = () => {
-    // Удаляем данные авторизации из localStorage
     localStorage.removeItem('authenticated');
 
-    // Показываем форму входа и скрываем админский контент
     document.querySelector('.main').style.display = 'block';
     document.getElementById('admin-content').style.display = 'none';
 
@@ -124,18 +111,14 @@ const logout = () => {
     underline.style.left = '0';
 };
 
-// переключает видимые разделы контента
 const showSection = (sectionId, element) => {
-    // Переключаем видимые разделы
     const sections = document.querySelectorAll('.tab-content');
     sections.forEach(section => section.style.display = 'none');
     document.getElementById(sectionId).style.display = 'block';
 
-    // Устанавливаем активный элемент и обновляем линию
     setActive(element);
 };
 
-// Проверка авторизации при загрузке страницы
 window.addEventListener('load', () => {
     const isAuthenticated = localStorage.getItem('authenticated');
     
@@ -153,16 +136,38 @@ window.addEventListener('load', () => {
     }
 });
 
-// Загружаем данные для таблицы скидок и поведения пользователей
+function resetDiscountSettings() {
+    document.getElementById('order-threshold').value = '';
+    document.getElementById('discount-percentage').value = '';
+    document.getElementById('discount-start').value = '';
+    document.getElementById('discount-end').value = '';
+
+    localStorage.removeItem('discountSettings');
+
+    fetch('/db/db.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки JSON файла');
+            }
+            return response.json();
+        })
+        .then(data => {
+            renderDiscountTable(data);
+            localStorage.setItem('discountTableData', JSON.stringify(data)); 
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+}
+
+document.getElementById('resetDiscountSettings').addEventListener('click', resetDiscountSettings);
+
 function loadJSONData() {
     const storedDiscountTableData = localStorage.getItem('discountTableData');
     if (storedDiscountTableData) {
-        // Используем данные из LocalStorage
         let data = JSON.parse(storedDiscountTableData);
 
-        // Проверяем, есть ли productActions в данных из LocalStorage
         if (!data.productActions) {
-            // Если productActions отсутствует, загружаем данные из JSON для его добавления
             fetch('/db/db.json')
                 .then(response => {
                     if (!response.ok) {
@@ -171,10 +176,8 @@ function loadJSONData() {
                     return response.json();
                 })
                 .then(jsonData => {
-                    // Добавляем productActions и другие отсутствующие данные к data из LocalStorage
                     data = { ...jsonData, ...data };
 
-                    // Рендерим таблицы с обновленными данными и сохраняем обратно в LocalStorage
                     renderDiscountTable(data);
                     renderUserBehaviorTable(data);
                     localStorage.setItem('discountTableData', JSON.stringify(data));
@@ -183,12 +186,10 @@ function loadJSONData() {
                     console.error('Ошибка:', error);
                 });
         } else {
-            // Если productActions присутствует, рендерим обе таблицы
             renderDiscountTable(data);
             renderUserBehaviorTable(data);
         }
     } else {
-        // Загружаем данные из JSON, если LocalStorage пустой
         fetch('/db/db.json')
             .then(response => {
                 if (!response.ok) {
@@ -197,10 +198,9 @@ function loadJSONData() {
                 return response.json();
             })
             .then(data => {
-                renderDiscountTable(data); // Рендерим таблицу скидок
-                renderUserBehaviorTable(data); // Рендерим таблицу поведения пользователей
+                renderDiscountTable(data); 
+                renderUserBehaviorTable(data); 
                 
-                // Сохраняем данные в LocalStorage
                 localStorage.setItem('discountTableData', JSON.stringify(data));
             })
             .catch(error => {
@@ -209,12 +209,9 @@ function loadJSONData() {
     }
 }
 
-
-
-// Функция рендеринга таблицы скидок
 function renderDiscountTable(data) {
     const tableBody = document.querySelector('.discount-table tbody');
-    tableBody.innerHTML = ''; 
+    tableBody.innerHTML = '';
 
     data.customers.forEach(customer => {
         const discount = data.discounts.find(d => d.discountId === customer.discountId);
@@ -222,22 +219,104 @@ function renderDiscountTable(data) {
 
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${customer.lastName} ${customer.firstName} ${customer.middleName}</td>
+            <td class="customer-name">${customer.lastName} ${customer.firstName} ${customer.middleName}</td>
             <td>${customer.order_count || 0}</td>
             <td>${discountPercentage}</td>
         `;
+        
+        row.addEventListener('click', () => {
+            showPersonalizedOffers(customer.customerId, data);
+        });
+
         tableBody.appendChild(row);
     });
 }
+
+function showPersonalizedOffers(customerId, data) {
+    const customer = data.customers.find(c => c.customerId === customerId);
+    if (!customer) {
+        console.error("Клиент не найден");
+        return;
+    }
+
+    const productActions = data.productActions.filter(action => action.customerId === customerId);
+    const viewedProductIds = productActions.map(action => action.productId);
+    const viewedProducts = data.products.filter(product => viewedProductIds.includes(product.productId));
+    
+    const categoryIds = [...new Set(viewedProducts.map(product => product.categoryId))];
+
+    const personalizedProducts = data.products.filter(product => 
+        categoryIds.includes(product.categoryId) && !viewedProductIds.includes(product.productId)
+    );
+
+    const persName = document.querySelector('.pers_name p:last-child');
+    persName.textContent = `${customer.lastName} ${customer.firstName} ${customer.middleName}`;
+
+    const persCardsContainer = document.querySelector('.pers_cards');
+    persCardsContainer.innerHTML = ''; 
+
+    personalizedProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.classList.add('third-section__cards-item', 'item');
+        card.innerHTML = `
+            <img class="item__im" src="${product.image}" alt="">
+            <p class="item__txt txt">${product.productName}</p>
+            <div class="item__price price">
+                <p>${product.price} ₽</p>
+            </div>
+        `;
+        persCardsContainer.appendChild(card);
+    });
+
+    document.getElementById('perspred').style.display = 'block';
+}
+
+function sortTable(columnIndex) {
+    const table = document.querySelector('#behavior .discount-table');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    const isAscending = tbody.getAttribute('data-sort-order') === 'asc';
+    tbody.setAttribute('data-sort-order', isAscending ? 'desc' : 'asc');
+
+    rows.sort((rowA, rowB) => {
+        const cellA = rowA.cells[columnIndex].innerText;
+        const cellB = rowB.cells[columnIndex].innerText;
+
+        if (columnIndex === 3) { 
+            return isAscending ? new Date(cellA) - new Date(cellB) : new Date(cellB) - new Date(cellA);
+        }
+
+        return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+    });
+
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+function filterTable() {
+    const filterValue = document.getElementById('actionTypeFilter').value;
+    const table = document.querySelector('#behavior .discount-table');
+    const tbody = table.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
+
+    rows.forEach(row => {
+        const actionType = row.cells[1].innerText;
+        row.style.display = (filterValue === "" || actionType === filterValue) ? "" : "none";
+    });
+
+    tbody.setAttribute('data-sort-order', 'asc');
+}
+
 function renderUserBehaviorTable(data) {
     const tableBody = document.querySelector('#behavior .discount-table tbody');
-    tableBody.innerHTML = ''; // Очистить перед добавлением
+    tableBody.innerHTML = ''; 
+    tableBody.setAttribute('data-sort-order', 'asc');
 
     data.productActions.forEach(action => {
         const product = data.products.find(p => p.productId === action.productId);
         const customer = data.customers.find(c => c.customerId === action.customerId);
 
-        // Проверяем наличие необходимых данных
         if (product && customer) {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -251,20 +330,46 @@ function renderUserBehaviorTable(data) {
     });
 }
 
-// сохраняем настройку скидки
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toISOString().split('T')[0]; 
+    document.getElementById('discount-start').setAttribute('min', today); 
+    document.getElementById('discount-end').setAttribute('min', today); 
+});
+
 function saveDiscountSettings() {
     const orderThreshold = parseInt(document.getElementById('order-threshold').value);
     const discountPercentage = parseInt(document.getElementById('discount-percentage').value);
     const discountStart = document.getElementById('discount-start').value;
     const discountEnd = document.getElementById('discount-end').value;
 
-    // проверка на корректность
-    if (isNaN(orderThreshold) || isNaN(discountPercentage) || !discountStart || !discountEnd) {
-        console.error('Некорректные данные для сохранения.');
+    const inputs = [orderThreshold, discountPercentage, discountStart, discountEnd];
+    const inputElements = [
+        document.getElementById('order-threshold'),
+        document.getElementById('discount-percentage'),
+        document.getElementById('discount-start'),
+        document.getElementById('discount-end')
+    ];
+    
+    inputElements.forEach(input => {
+        input.classList.remove('invalid');
+    });
+
+    if (inputs.some(input => !input && input !== 0)) {
+        inputElements.forEach(input => {
+            if (!input.value) {
+                input.classList.add('invalid');
+            }
+        });
         return;
     }
 
-    // сохраняем в локал
+    if (discountPercentage >= 100) {
+        document.querySelector('#text_inv_procent').style.display = 'block';
+        document.getElementById('text_inv_procent').classList.add('set_text_invalid');
+        document.getElementById('discount-percentage').classList.add('invalid');
+        return;
+    }
+
     const discountSettings = {
         orderThreshold: orderThreshold,
         discountPercentage: discountPercentage,
@@ -273,7 +378,6 @@ function saveDiscountSettings() {
     };
     localStorage.setItem('discountSettings', JSON.stringify(discountSettings));
 
-    // Применяем скидки и обновляем таблицу
     fetch('/db/db.json')
         .then(response => response.json())
         .then(data => {
@@ -294,13 +398,21 @@ function saveDiscountSettings() {
             const updatedData = { customers: updatedCustomers, discounts: data.discounts };
             renderDiscountTable(updatedData);
 
-            // Сохраняем обновлённые данные таблицы в localStorage
             localStorage.setItem('discountTableData', JSON.stringify(updatedData));
+
+            const successMessage = document.querySelector('.text_done');
+            successMessage.style.display = 'flex';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 8000); 
         })
         .catch(error => console.error('Ошибка:', error));
 }
+document.getElementById('discount-percentage').addEventListener('input', function() {
+    document.querySelector('#text_inv_procent').style.display = 'none'; 
+    this.classList.remove('invalid'); 
+});
 
-// Загружаем наши настройки скидки
 window.addEventListener('load', () => {
     const savedSettings = localStorage.getItem('discountSettings');
     if (savedSettings) {

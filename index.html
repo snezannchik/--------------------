@@ -11,7 +11,7 @@
     <title>Программа лояльности магазина сладостей</title>
 </head>
 <body>
-    <!-- Форма авторизации -->
+<!-- Форма авторизации -->
 <div class="auth">
     <div class="main">
         <div class="logo">
@@ -66,26 +66,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Иванов Иван Иванович</td>
-                            <td>5</td>
-                            <td>5%</td>
-                        </tr>
-                        <tr>
-                            <td>Петрова Анна Сергеевна</td>
-                            <td>10</td>
-                            <td>10%</td>
-                        </tr>
-                        <tr>
-                            <td>Сидоров Сергей Петрович</td>
-                            <td>1</td>
-                            <td>7%</td>
-                        </tr>
-                        <tr>
-                            <td>Кузнецова Ольга Викторовна</td>
-                            <td>2</td>
-                            <td>12%</td>
-                        </tr>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -104,50 +84,59 @@
                 <div class="wraper_pers">
                     <h1 class="pers_text">Персонализированные предложения</h1>
                     <div class="pers_name">
-                        <p>Клиент:</p> 
-                        <p>Иванов Иван Иванович</p>
+                        <p>Клиент:</p>
+                        <p class="customer-name">Имя Клиента</p>
+                    </div>                    
+                    <div class="pers_cards">
+                        <!-- <div class="third-section__cards-item item">
+                            <img class="item__im" src="img/card1.png" alt="">
+                            <p class="item__txt txt">Пастила яблочная Белёвская</p>
+                            <div class="item__price price">
+                                <p>600 ₽</p>
+                            </div>
+                        </div> -->
                     </div>
-                    <!-- карточки товара -->
-                    <div class="pers_cards"></div>
                 </div>
             </div>
         </section>        
 
-        <!-- Раздел Поведение пользователей -->
-        <section id="behavior" class="tab-content" style="display: none;">
-            <div class="table-container">
-                <table class="discount-table">
-                    <thead>
-                        <tr>
-                            <th>Имя клиента</th>
-                            <th>Тип действия<img class="down_arrow" src="img/downarrow.svg" alt=""></th>
-                            <th>Название товара</th>
-                            <th>Дата действия<img class="down_arrow" src="img/downarrow.svg" alt=""></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Иванов Иван Иванович</td>
-                            <td>Просмотр</td>
-                            <td>Шоколадный торт</td>
-                            <td>2024-01-01</td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="tfoot_pov">
-                        <tr>
-                            <td colspan="4">
-                                <div class="pagination">
-                                    <img src="img/prev.svg" alt="Назад" class="pagination-icon">
-                                    <img src="img/next.svg" alt="Вперед" class="pagination-icon">
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </section>
+<!-- Раздел Поведение пользователей -->
+<section id="behavior" class="tab-content" style="display: none;">
+    <div class="table-container">
+        <table class="discount-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Имя клиента</th>
+                    <th>
+                        Тип действия
+                        <select id="actionTypeFilter" class="filter-select" onchange="filterTable()">
+                            <option value="">Все</option>
+                            <option value="Заказ">Заказ</option>
+                            <option value="Просмотр">Просмотр</option>
+                            <option value="Добавлено в корзину">Добавлено в корзину</option>
+                        </select>
+                    </th>
+                    <th onclick="sortTable(2)">Название товара</th>
+                    <th onclick="sortTable(3)">Дата действия</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot class="tfoot_pov">
+                <tr>
+                    <td colspan="4">
+                        <div class="pagination">
+                            <img src="img/prev.svg" alt="Назад" class="pagination-icon">
+                            <img src="img/next.svg" alt="Вперед" class="pagination-icon">
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</section>
 
-        <!-- Раздел Настройки -->
+<!-- Раздел Настройки -->
 <section id="settings" class="tab-content" style="display: none;">
     <div class="set">
         <div class="wrapper_set">
@@ -158,7 +147,8 @@
                 </div>
                 <div class="set_left_discount square">
                     <span class="set_text">Выберите процент скидки</span>
-                    <input id="discount-percentage" class="set_inp" type="number" required placeholder="Процент скидки" min="1">
+                    <span id="text_inv_procent" style="display: none;">Процент скидки не может быть 100 или больше</span>
+                    <input id="discount-percentage" class="set_inp" type="number" required placeholder="Процент скидки" min="1" max="99">
                 </div>
             </div>
             <div class="set_right">
@@ -173,7 +163,7 @@
         </div>
         <div class="btn_set">
             <button class="btn_set_save" onclick="saveDiscountSettings()">СОХРАНИТЬ</button>
-            <button class="btn_set_save">СБРОСИТЬ</button>
+            <button class="btn_set_save" id="resetDiscountSettings">СБРОСИТЬ</button>
         </div>
         <span class="text_done" style="display: none;">Скидка успешно сохранена!</span>
     </div>

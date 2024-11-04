@@ -284,6 +284,13 @@ th img.down_arrow {
     font-weight: 400;
     font-size: 20px;
 }
+.set_text_invalid{
+    font-family: Montserrat;
+    font-weight: 400;
+    font-size: 16px;
+    color: red;
+    margin-bottom: -40px;
+}
 .set{
     display: flex;
     flex-direction: column;
@@ -344,7 +351,7 @@ th img.down_arrow {
 .text_done{
     font-family: Montserrat;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 24px;
     color: var(--white-color);
     display: flex;
     align-items: center;
@@ -381,11 +388,11 @@ th img.down_arrow {
     display: flex;
     flex-direction: column;
     /* align-items: center; */
-    gap: 50px;
+    gap: 30px;
     background-color: var(--white-color);
     border-radius: 15px;
     padding: 30px;
-
+    margin-top: 50px;
 }
 .pers_text{
     text-align: center;
@@ -401,3 +408,26 @@ th img.down_arrow {
     font-weight: 400;
     font-size: 20px;
 }
+.discount-table .customer-name:hover {
+    cursor: pointer;
+    font-weight: 500;
+
+}
+
+.item{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 246px;
+    height: 320px;
+    color: var(--font-color);
+    font-family: Montserrat;
+    font-weight: 400;
+}
+
+.item__price{
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 20px;
+}
+
