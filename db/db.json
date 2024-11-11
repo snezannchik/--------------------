@@ -89,6 +89,24 @@
         "email": "oa.ovanko@example.com",
         "discountId": 4,
         "order_count": 4
+      },
+      {
+        "customerId": 7,
+        "firstName": "Елена",
+        "lastName": "Иванова",
+        "middleName": "Сергеевна",
+        "email": "oa.kovanko@example.com",
+        "discountId": 4,
+        "order_count": 4
+      },
+      {
+        "customerId": 8,
+        "firstName": "Юлия",
+        "lastName": "Сергеева",
+        "middleName": "Сергеевна",
+        "email": "oa.ovanko@example.com",
+        "discountId": 4,
+        "order_count": 4
       }
     ],
     "categories": [
@@ -113,6 +131,8 @@
       { "actionId": 3, "productId": 2, "customerId": 3, "actionType": "order", "actionDate": "2024-01-03T12:00:00Z" },
       { "actionId": 4, "productId": 4, "customerId": 4, "actionType": "view", "actionDate": "2024-10-06T12:00:00Z" },
       { "actionId": 5, "productId": 5, "customerId": 5, "actionType": "add_to_cart", "actionDate": "2024-10-06T12:00:00Z" },
-      { "actionId": 6, "productId": 7, "customerId": 6, "actionType": "view", "actionDate": "2024-10-06T12:00:00Z" }
+      { "actionId": 6, "productId": 7, "customerId": 6, "actionType": "view", "actionDate": "2024-10-06T12:00:00Z" },
+      { "actionId": 7, "productId": 6, "customerId": 7, "actionType": "add_to_cart", "actionDate": "2024-10-06T12:00:00Z" },
+      { "actionId": 8, "productId": 8, "customerId": 8, "actionType": "view", "actionDate": "2024-10-06T12:00:00Z" }
     ]
   }

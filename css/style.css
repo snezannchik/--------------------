@@ -198,7 +198,6 @@ header, main {
     transition: width 0.3s, left 0.3s; 
 }
 
-
 /* Раздел Скидки */
 .table-container {
     width: 100%;
@@ -219,6 +218,7 @@ header, main {
     box-sizing: border-box;
     overflow: hidden;
 }
+
 /* Шапка таблицы */
 .discount-table thead {
     background-color: var(--grey-color);
@@ -277,12 +277,40 @@ th img.down_arrow {
     vertical-align: middle; 
     margin-left: 5px; 
 }
+/* Стили для контейнера селекта */
+.filter-select {
+    width: 100%; /* Ширина на 100% */
+    max-width: 250px; /* Максимальная ширина */
+    padding: 10px; /* Отступы внутри селекта */
+    font-size: 16px; 
+    font-family: Montserrat;
+    color: var(--white-color);
+    background-color: var(--grey-color); /* Цвет фона */
+    border: 1px solid var(--white-color); /* Граница */
+    border-radius: 5px; /* Закругленные углы */
+    appearance: none; /* Убираем стандартный стиль браузера */
+    background-image: url('/img/filter.svg'); /* Иконка для стрелки */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Позиция иконки */
+}
+
+/* Стили для опций селекта */
+.filter-select option {
+    padding: 10px; /* Отступы внутри опций (не всегда работает) */
+}
+
+/* Стили для состояния при наведении и фокусе */
+.filter-select:hover,
+.filter-select:focus {
+    border-color: var(--white-color); /* Цвет границы при наведении и фокусе */
+    outline: none; /* Убираем стандартное обводка при фокусе */
+}
 
 /* Раздел Настройки */
 .set_text{
     font-family: Montserrat;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 16px;
 }
 .set_text_invalid{
     font-family: Montserrat;
@@ -431,3 +459,9 @@ th img.down_arrow {
     font-size: 20px;
 }
 
+.error{
+    display: block;
+    font-family: Montserrat;
+    font-weight: 400;
+    font-size: 16px;
+}
