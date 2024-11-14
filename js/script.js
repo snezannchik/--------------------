@@ -467,10 +467,19 @@ function saveDiscountSettings() {
         });
         return;
     }
-    if (discountPercentage >= 100) {
+    if (orderThreshold <= 0) {
+        document.getElementById('order-threshold').classList.add('invalid');
+        const errorSpan = document.createElement('span');
+        errorSpan.textContent = 'Количество покупок не может быть меньше 0';
+        errorSpan.classList.add('error');
+        errorSpan.style.color = 'red';
+        document.getElementById('order-threshold').parentNode.insertBefore(errorSpan, document.getElementById('order-threshold').nextSibling);
+        return;
+    }
+    if (discountPercentage >= 100 || discountPercentage <= 0) {
         document.getElementById('discount-percentage').classList.add('invalid');
         const errorSpan = document.createElement('span');
-        errorSpan.textContent = 'Скидка не может быть 100% или выше';
+        errorSpan.textContent = 'Скидка не может быть меньше 0% или больше 99%';
         errorSpan.classList.add('error');
         errorSpan.style.color = 'red';
         document.getElementById('discount-percentage').parentNode.insertBefore(errorSpan, document.getElementById('discount-percentage').nextSibling);
@@ -514,11 +523,6 @@ function saveDiscountSettings() {
         })
         .catch(error => console.error('Ошибка:', error));
 }
-
-document.getElementById('discount-percentage').addEventListener('input', function() {
-    document.querySelector('#text_inv_procent').style.display = 'none';
-    this.classList.remove('invalid'); 
-});
 
 window.addEventListener('load', () => {
     const savedSettings = localStorage.getItem('discountSettings');
