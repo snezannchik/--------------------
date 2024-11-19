@@ -1,35 +1,37 @@
 // Функция для авторизации
 const authenticate = async () => {
-    const username = document.querySelector('input[name="username"]').value.trim();
-    const password = document.querySelector('input[name="password"]').value.trim();
+    const usernameInput = document.querySelector('input[name="username"]');
+    const passwordInput = document.querySelector('input[name="password"]');
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
     const errorMessage = document.querySelector('.error-message');
 
     errorMessage.style.display = 'none'; 
+    usernameInput.classList.remove('invalid'); 
+    passwordInput.classList.remove('invalid'); 
 
     if (!username) {
-        showError('Пожалуйста, введите логин.');
+        showError('Пожалуйста, введите логин.', usernameInput);
         return;
     }
 
     if (username.length < 5) {
-        showError('Логин должен содержать не менее 5 символов.');
-        document.querySelector('input[name="username"]').classList.add('invalid');
+        showError('Логин должен содержать не менее 5 символов.', usernameInput);
         return;
     }
 
     if (/[^a-zA-Z]/.test(username)) {
-        showError('Логин может содержать только буквы.');
-        document.querySelector('input[name="username"]').classList.add('invalid');
+        showError('Логин может содержать только латинские буквы.', usernameInput);
         return;
     }
 
     if (!password) {
-        showError('Пожалуйста, введите пароль.');
+        showError('Пожалуйста, введите пароль.', passwordInput);
         return;
     }
 
     if (password.length < 3) {
-        showError('Пароль должен содержать не менее 3 символов.');
+        showError('Пароль должен содержать не менее 3 символов.', passwordInput);
         return;
     }
 
@@ -53,7 +55,7 @@ const authenticate = async () => {
                 setActive(firstItem); 
             }
         } else {
-            showError('Неверный логин или пароль.'); 
+            showError('Неверный логин или пароль.', usernameInput, passwordInput); 
         }
     } catch (error) {
         console.error('Ошибка:', error);
@@ -61,16 +63,18 @@ const authenticate = async () => {
     }
 };
 
-// Функция для отображения сообщений об ошибках
-const showError = (message) => {
+const showError = (message, ...inputs) => {
     const errorMessage = document.querySelector('.error-message');
     errorMessage.textContent = message; 
+    errorMessage.style.display = 'block';
     const errorM = document.querySelector('.login-form');
     errorM.style.paddingTop = '0px';
-    errorMessage.style.display = 'block';
+    
+    inputs.forEach(input => {
+        input.classList.add('invalid');
+    });
 };
 
-// Обработчик события отправки формы авторизации
 document.getElementById('authForm').addEventListener('submit', function (event) {
     event.preventDefault(); 
     authenticate(); 
@@ -218,13 +222,11 @@ function loadJSONData() {
     }
 }
 
-// При первой загрузке данных применяем функцию для таблицы с пагинацией
 window.addEventListener('DOMContentLoaded', loadJSONData);
 
-// Количество записей на одной странице
 const recordsPerPage = 5;
 let currentPage = 1;
-let totalRecords = 0; // Будет обновлено после загрузки данных
+let totalRecords = 0; 
 
 // Функция для рендеринга таблицы с учетом пагинации
 function renderDiscountTable(data) {
@@ -252,7 +254,6 @@ function renderDiscountTable(data) {
         tableBody.appendChild(row); 
     });
 
-    // Обновляем общее количество записей для пагинации
     totalRecords = data.customers.length;
     updatePaginationIcons();
 }
@@ -282,7 +283,6 @@ document.querySelector('.pagination .pagination-icon[alt="Вперед"]').addEv
     }
 });
 
-// Инициализация загрузки данных при первой загрузке
 window.addEventListener('DOMContentLoaded', loadJSONData);
 
 
@@ -366,10 +366,9 @@ function filterTable() {
     tbody.setAttribute('data-sort-order', 'asc'); 
 }
 
-// Количество записей на одной странице для таблицы "Поведение пользователей"
 const behaviorRecordsPerPage = 5;
 let currentBehaviorPage = 1;
-let totalBehaviorRecords = 0; // Будет обновлено после загрузки данных
+let totalBehaviorRecords = 0; 
 
 // Функция для рендеринга таблицы поведения пользователей с учетом пагинации
 function renderUserBehaviorTableWithPagination(data) {
@@ -395,7 +394,6 @@ function renderUserBehaviorTableWithPagination(data) {
         }
     });
 
-    // Обновляем общее количество записей для пагинации
     totalBehaviorRecords = data.productActions.length;
     updateBehaviorPaginationIcons();
 }
@@ -413,7 +411,7 @@ function updateBehaviorPaginationIcons() {
 document.querySelector('#behavior .pagination .pagination-icon[alt="Назад"]').addEventListener('click', () => {
     if (currentBehaviorPage > 1) {
         currentBehaviorPage--;
-        loadJSONData(); // Заново загружаем данные с учетом пагинации
+        loadJSONData(); 
     }
 });
 
@@ -421,7 +419,7 @@ document.querySelector('#behavior .pagination .pagination-icon[alt="Назад"]
 document.querySelector('#behavior .pagination .pagination-icon[alt="Вперед"]').addEventListener('click', () => {
     if (currentBehaviorPage < Math.ceil(totalBehaviorRecords / behaviorRecordsPerPage)) {
         currentBehaviorPage++;
-        loadJSONData(); // Заново загружаем данные с учетом пагинации
+        loadJSONData(); 
     }
 });
 
