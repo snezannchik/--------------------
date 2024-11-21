@@ -95,7 +95,10 @@
         <table class="discount-table">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Имя клиента</th>
+                    <th>Имя клиента
+                        <br><input class="searchInput" type="text" id="searchInput" placeholder="Введите имя...">
+                        <button class="btn-searchInput" onclick="performSearch()">Найти</button>
+                    </th>
                     <th>
                         Тип действия
                         <select id="actionTypeFilter" class="filter-select" onchange="filterTable()">
@@ -146,7 +149,7 @@
                 <label class="set_text">по
                     <input id="discount-end" class="set_inp" type="date" required placeholder="Конец действия">
                 </label>
-                <div class="hero__timer timer set_text" id="timer"></div>
+                <div class="hero__timer timer set_text_timer" id="timer"></div>
             </div>
         </div>
         <div class="btn_set">

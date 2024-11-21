@@ -146,20 +146,17 @@ window.addEventListener('load', () => {
     }
 });
 
-// Функция для скрытия таймера
 function hideTimer() {
     const timerElement = document.getElementById('timer');
     if (timerElement) {
-        timerElement.textContent = ''; // Убираем текст
-        timerElement.style.display = 'none'; // Скрываем элемент
+        timerElement.textContent = ''; 
+        timerElement.style.display = 'none'; 
     }
 }
-
-// Функция для показа таймера
 function showTimer() {
     const timerElement = document.getElementById('timer');
     if (timerElement) {
-        timerElement.style.display = 'block'; // Показываем элемент
+        timerElement.style.display = 'block'; 
     }
 }
 
@@ -173,7 +170,7 @@ function resetDiscountSettings() {
     localStorage.removeItem('discountSettings');
     console.log('Настройки скидок сброшены.');
 
-    hideTimer(); // Скрываем таймер при сбросе
+    hideTimer(); 
 
     fetch('/db/db.json')
         .then(response => {
@@ -183,7 +180,7 @@ function resetDiscountSettings() {
             return response.json();
         })
         .then(data => {
-            renderDiscountTable(data); // Перерисовать таблицу
+            renderDiscountTable(data); 
             localStorage.setItem('discountTableData', JSON.stringify(data));
         })
         .catch(error => {
@@ -191,10 +188,8 @@ function resetDiscountSettings() {
         });
 }
 
-// Обработчик для кнопки сброса настроек скидок
 document.getElementById('resetDiscountSettings').addEventListener('click', resetDiscountSettings);
 
-// Загрузка настроек скидок при загрузке страницы
 window.addEventListener('DOMContentLoaded', () => {
     const discountSettings = JSON.parse(localStorage.getItem('discountSettings'));
 
@@ -205,8 +200,8 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('discount-end').value = discountSettings.endDate || '';
     }
 
-    loadJSONData(); // Загружаем данные таблиц
-    checkDiscountExpiration(); // Проверяем срок действия скидок при загрузке
+    loadJSONData(); 
+    checkDiscountExpiration(); 
 });
 
 // Функция для загрузки данных из JSON
@@ -262,7 +257,6 @@ window.addEventListener('DOMContentLoaded', loadJSONData);
 const recordsPerPage = 5;
 let currentPage = 1;
 let totalRecords = 0; 
-
 // Функция для рендеринга таблицы с учетом пагинации
 function renderDiscountTable(data) {
     const tableBody = document.querySelector('.discount-table tbody');
@@ -302,7 +296,6 @@ function updatePaginationIcons() {
     nextIcon.style.visibility = currentPage < Math.ceil(totalRecords / recordsPerPage) ? 'visible' : 'hidden';
 }
 
-// Обработчик для кнопки "Назад"
 document.querySelector('.pagination .pagination-icon[alt="Назад"]').addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
@@ -310,7 +303,6 @@ document.querySelector('.pagination .pagination-icon[alt="Назад"]').addEven
     }
 });
 
-// Обработчик для кнопки "Вперед"
 document.querySelector('.pagination .pagination-icon[alt="Вперед"]').addEventListener('click', () => {
     if (currentPage < Math.ceil(totalRecords / recordsPerPage)) {
         currentPage++;
@@ -319,7 +311,6 @@ document.querySelector('.pagination .pagination-icon[alt="Вперед"]').addEv
 });
 
 window.addEventListener('DOMContentLoaded', loadJSONData);
-
 
 // Функция для показа персонализированных предложений для клиента
 function showPersonalizedOffers(customerId, data) {
@@ -420,9 +411,9 @@ function renderUserBehaviorTableWithPagination(data) {
         if (product && customer) {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${customer.lastName} ${customer.firstName} ${customer.middleName}</td>
+                <td class="customer-name-pov">${customer.lastName} ${customer.firstName} ${customer.middleName}</td>
                 <td>${action.actionType === 'view' ? 'Просмотр' : action.actionType === 'add_to_cart' ? 'Добавлено в корзину' : 'Заказ'}</td>
-                <td>${product.productName}</td>
+                <td class="customer-tovar">${product.productName}</td>
                 <td>${new Date(action.actionDate).toLocaleDateString()}</td>
             `;
             tableBody.appendChild(row); 
@@ -442,7 +433,6 @@ function updateBehaviorPaginationIcons() {
     nextIcon.style.visibility = currentBehaviorPage < Math.ceil(totalBehaviorRecords / behaviorRecordsPerPage) ? 'visible' : 'hidden';
 }
 
-// Обработчик для кнопки "Назад" в таблице "Поведение пользователей"
 document.querySelector('#behavior .pagination .pagination-icon[alt="Назад"]').addEventListener('click', () => {
     if (currentBehaviorPage > 1) {
         currentBehaviorPage--;
@@ -450,7 +440,6 @@ document.querySelector('#behavior .pagination .pagination-icon[alt="Назад"]
     }
 });
 
-// Обработчик для кнопки "Вперед" в таблице "Поведение пользователей"
 document.querySelector('#behavior .pagination .pagination-icon[alt="Вперед"]').addEventListener('click', () => {
     if (currentBehaviorPage < Math.ceil(totalBehaviorRecords / behaviorRecordsPerPage)) {
         currentBehaviorPage++;
@@ -466,7 +455,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('discount-end').setAttribute('min', today); 
 });
 
-// Проверка срока действия скидок
 function checkDiscountExpiration() {
     const discountSettings = JSON.parse(localStorage.getItem('discountSettings'));
 
@@ -481,8 +469,21 @@ function checkDiscountExpiration() {
         }
     }
 }
-
 setInterval(checkDiscountExpiration, 5000);
+
+// поиск клиента
+function performSearch() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const tableRows = document.querySelectorAll('.discount-table tbody tr'); 
+
+    tableRows.forEach(row => {
+        const customerNameCell = row.querySelector('.customer-name-pov'); 
+        if (customerNameCell) {
+            const customerName = customerNameCell.textContent.toLowerCase(); 
+            row.style.display = customerName.includes(searchInput) ? '' : 'none'; 
+        }
+    });
+}
 
 // Функция для сохранения настроек скидок
 function saveDiscountSettings() {
@@ -598,7 +599,6 @@ function initializeTimer() {
     startTimer(deadline);
 }
 
-// Запуск таймера
 function startTimer(deadline) {
     const timerElement = document.getElementById('timer');
 
@@ -622,14 +622,12 @@ function startTimer(deadline) {
         timerElement.textContent = `До конца скидки: ${days} д. ${hours} ч. ${minutes} мин. ${seconds} сек.`;
     }
 
-    updateTimer(); // Обновляем таймер сразу при запуске
+    updateTimer(); 
     const timerInterval = setInterval(updateTimer, 1000);
 }
 
-// Событие изменения даты
 document.getElementById('discount-end').addEventListener('change', initializeTimer);
 
-// Загружаем настройки и таймер при загрузке страницы
 window.addEventListener('load', () => {
     const savedSettings = localStorage.getItem('discountSettings');
     const timerElement = document.getElementById('timer');
