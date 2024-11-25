@@ -413,15 +413,60 @@ function renderUserBehaviorTableWithPagination(data) {
             row.innerHTML = `
                 <td class="customer-name-pov">${customer.lastName} ${customer.firstName} ${customer.middleName}</td>
                 <td>${action.actionType === 'view' ? 'Просмотр' : action.actionType === 'add_to_cart' ? 'Добавлено в корзину' : 'Заказ'}</td>
-                <td class="customer-tovar">${product.productName}</td>
+                <td class="customer-tovar">
+                    <span class="product-name" data-product-id="${product.productId}">${product.productName}</span>
+                </td>
                 <td>${new Date(action.actionDate).toLocaleDateString()}</td>
             `;
-            tableBody.appendChild(row); 
+            tableBody.appendChild(row);
         }
     });
 
     totalBehaviorRecords = data.productActions.length;
     updateBehaviorPaginationIcons();
+
+    // Добавляем обработчики событий для открытия окна
+    document.querySelectorAll('.product-name').forEach(productName => {
+        productName.addEventListener('click', (event) => {
+            const productId = event.target.dataset.productId;
+            openProductWindow(productId, data);
+        });
+    });
+}
+
+// Функция для открытия окна с карточкой товара
+function openProductWindow(productId, data) {
+    const product = data.products.find(p => p.productId == productId);
+    if (!product) {
+        console.error("Продукт не найден");
+        return;
+    }
+
+    const popup = window.open('', '', 'width=350,height=400'); 
+
+    popup.document.write(`
+        <html>
+            <head>
+                <title>${product.productName}</title>
+                <style>
+                    body { font-family: Montserrat; padding: 20px; background-color: #171923;}
+                    .product-card { background-color: #FBF2FF; padding: 20px; width: 250px; padding-right: 1px; border-radius: 15px;}
+                    .product-card img { max-width: 100%; height: auto; border-radius: 5px; }
+                    .product-card .product-name { font-size: 1.2em; margin: 20px 0; }
+                    .product-card .price { font-family: Montserrat; font-weight: 400; color: #3C2648; font-size: 18px;}
+                </style>
+            </head>
+            <body>
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.productName}">
+                    <p class="product-name">${product.productName}</p>
+                    <p class="price">${product.price} ₽</p>
+                </div>
+            </body>
+        </html>
+    `);
+
+    popup.document.close();
 }
 
 // Функция для обновления иконок пагинации таблицы "Поведение пользователей"
@@ -465,7 +510,7 @@ function checkDiscountExpiration() {
         if (currentDate > endDate) {
             localStorage.removeItem('discountSettings');
             console.log('Срок действия скидки истёк. Настройки скидок удалены.');
-            resetDiscountSettings(); // Сбрасываем настройки скидок в интерфейсе
+            resetDiscountSettings(); 
         }
     }
 }
