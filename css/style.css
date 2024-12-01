@@ -246,6 +246,9 @@ header, main {
     cursor: pointer;
 }
 /* поведение пользователей */
+.discount-table-th{
+    width: 350px;
+}
 th img.down_arrow {
     vertical-align: middle; 
     margin-left: 5px; 
